@@ -1,0 +1,6 @@
+<p>No existe el archivo de Conexión.</p>PHP Warning:  mysql_select_db() expects parameter 2 to be resource, integer given in /volume1/web/DAO/vistas.php on line 11
+
+Warning: mysql_select_db() expects parameter 2 to be resource, integer given in /volume1/web/DAO/vistas.php on line 11
+Error en la consulta    error  No database selectedPHP Warning:  mysql_close() expects parameter 1 to be resource, integer given in /volume1/web/DAO/vistas.php on line 22
+
+Warning: mysql_close() expects parameter 1 to be resource, integer given in /volume1/web/DAO/vistas.php on line 22

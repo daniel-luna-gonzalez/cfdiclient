@@ -1,0 +1,17 @@
+/* 
+Utilizado por el archivo alta_sistema.js
+Da formato a la caja de texto donde se introduce el serial del equipo NAS
+del cliente.
+*/
+
+root { 
+    display: block;
+}
+#form_serial
+{
+    width: 90%;
+    font-size: 16px;
+    height:30%;
+    color: blue;
+    text-align: center;
+}
