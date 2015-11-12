@@ -119,7 +119,7 @@ class Monitor_Nomina_XML {
     }
     function Repeat_Update($directorio)
     {        
-//        $resultado="";
+        $resultado="";
         //Se limpia el arreglo carga nueva
         while(count($this->carga_nueva )) array_pop($this->carga_nueva );
         
@@ -140,9 +140,9 @@ class Monitor_Nomina_XML {
             $resultado=$resultado.$valor;
         }
             
-        $archivo_estado=fopen("/usr/CFDI/datos_n.txt", "w+");    
-        fwrite($archivo_estado, $resultado);
-        fclose($archivo_estado); 
+//        $archivo_estado=fopen("/usr/CFDI/datos_n.txt", "w+");    
+//        fwrite($archivo_estado, $resultado);
+//        fclose($archivo_estado); 
     }
     
     // Método que envia los nuevos archivos detectados a la Clase Pila.php

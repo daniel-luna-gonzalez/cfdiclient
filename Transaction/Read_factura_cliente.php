@@ -278,20 +278,20 @@ class Read_factura_cliente {
             "codigoPostal"=>$DomicilioFiscal['codigoPostal'] 
         );
     }                         
-     $array_ExpedidoEn=array();   
-    foreach ($xml->xpath('//cfdi:Comprobante//cfdi:Emisor//cfdi:ExpedidoEn') as $ExpedidoEn)
-    { 
-        $array_ExpedidoEn=array(
-            "expedidopais"=>  strtr($ExpedidoEn['pais'],'ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖØòóôõöøÙÚÛÜùúûüÝý','AAAAAAaaaaaaCcEEEEeeeeIIIIiiiiÑñOOOOOOooooooUUUUuuuuYy'),
-            "expedidocalle"=>  strtr($ExpedidoEn['calle'],'ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖØòóôõöøÙÚÛÜùúûüÝý','AAAAAAaaaaaaCcEEEEeeeeIIIIiiiiÑñOOOOOOooooooUUUUuuuuYy'),
-            "expedidoestado"=>$ExpedidoEn['estado'], 
-            "expedidocolonia"=>strtr($ExpedidoEn['colonia'],'ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖØòóôõöøÙÚÛÜùúûüÝý','AAAAAAaaaaaaCcEEEEeeeeIIIIiiiiÑñOOOOOOooooooUUUUuuuuYy'),
-            "expedidolocalidad"=>strtr($ExpedidoEn['localidad'],'ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖØòóôõöøÙÚÛÜùúûüÝý','AAAAAAaaaaaaCcEEEEeeeeIIIIiiiiÑñOOOOOOooooooUUUUuuuuYy'),
-            "expedidomunicipio"=>strtr($ExpedidoEn['municipio'],'ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖØòóôõöøÙÚÛÜùúûüÝý','AAAAAAaaaaaaCcEEEEeeeeIIIIiiiiÑñOOOOOOooooooUUUUuuuuYy'),
-            "expedidonoExterior"=>$ExpedidoEn['noExterior'], 
-            "expedidocodigoPostal"=>$ExpedidoEn['codigoPostal'], 
-         );
-    } 
+//     $array_ExpedidoEn=array();   
+//    foreach ($xml->xpath('//cfdi:Comprobante//cfdi:Emisor//cfdi:ExpedidoEn') as $ExpedidoEn)
+//    { 
+//        $array_ExpedidoEn=array(
+//            "pais"=>  strtr($ExpedidoEn['pais'],'ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖØòóôõöøÙÚÛÜùúûüÝý','AAAAAAaaaaaaCcEEEEeeeeIIIIiiiiÑñOOOOOOooooooUUUUuuuuYy'),
+//            "calle"=>  strtr($ExpedidoEn['calle'],'ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖØòóôõöøÙÚÛÜùúûüÝý','AAAAAAaaaaaaCcEEEEeeeeIIIIiiiiÑñOOOOOOooooooUUUUuuuuYy'),
+//            "estado"=>$ExpedidoEn['estado'], 
+//            "colonia"=>strtr($ExpedidoEn['colonia'],'ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖØòóôõöøÙÚÛÜùúûüÝý','AAAAAAaaaaaaCcEEEEeeeeIIIIiiiiÑñOOOOOOooooooUUUUuuuuYy'),
+//            "localidad"=>strtr($ExpedidoEn['localidad'],'ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖØòóôõöøÙÚÛÜùúûüÝý','AAAAAAaaaaaaCcEEEEeeeeIIIIiiiiÑñOOOOOOooooooUUUUuuuuYy'),
+//            "municipio"=>strtr($ExpedidoEn['municipio'],'ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖØòóôõöøÙÚÛÜùúûüÝý','AAAAAAaaaaaaCcEEEEeeeeIIIIiiiiÑñOOOOOOooooooUUUUuuuuYy'),
+//            "noExterior"=>$ExpedidoEn['noExterior'], 
+//            "codigoPostal"=>$ExpedidoEn['codigoPostal'], 
+//         );
+//    } 
       
     $emisor=array(
         "rfc"=>$Emisor['rfc'],
@@ -302,15 +302,15 @@ class Read_factura_cliente {
         "colonia"=>strtr($DomicilioFiscal['colonia'],'ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖØòóôõöøÙÚÛÜùúûüÝý','AAAAAAaaaaaaCcEEEEeeeeIIIIiiiiÑñOOOOOOooooooUUUUuuuuYy'),
         "municipio"=>strtr($DomicilioFiscal['municipio'],'ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖØòóôõöøÙÚÛÜùúûüÝý','AAAAAAaaaaaaCcEEEEeeeeIIIIiiiiÑñOOOOOOooooooUUUUuuuuYy'),
         "noExterior"=>$DomicilioFiscal['noExterior'], 
-        "codigoPostal"=>$DomicilioFiscal['codigoPostal'],
-        "expedidopais"=>strtr($ExpedidoEn['pais'],'ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖØòóôõöøÙÚÛÜùúûüÝý','AAAAAAaaaaaaCcEEEEeeeeIIIIiiiiÑñOOOOOOooooooUUUUuuuuYy'),
-        "expedidocalle"=>strtr($ExpedidoEn['calle'],'ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖØòóôõöøÙÚÛÜùúûüÝý','AAAAAAaaaaaaCcEEEEeeeeIIIIiiiiÑñOOOOOOooooooUUUUuuuuYy'),
-        "expedidoestado"=>$ExpedidoEn['estado'], 
-        "expedidocolonia"=>strtr($ExpedidoEn['colonia'],'ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖØòóôõöøÙÚÛÜùúûüÝý','AAAAAAaaaaaaCcEEEEeeeeIIIIiiiiÑñOOOOOOooooooUUUUuuuuYy'),
-        "expedidolocalidad"=>strtr($ExpedidoEn['localidad'],'ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖØòóôõöøÙÚÛÜùúûüÝý','AAAAAAaaaaaaCcEEEEeeeeIIIIiiiiÑñOOOOOOooooooUUUUuuuuYy'),
-        "expedidomunicipio"=>strtr($ExpedidoEn['municipio'],'ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖØòóôõöøÙÚÛÜùúûüÝý','AAAAAAaaaaaaCcEEEEeeeeIIIIiiiiÑñOOOOOOooooooUUUUuuuuYy'),
-        "expedidonoExterior"=>$ExpedidoEn['noExterior'], 
-        "expedidocodigoPostal"=>$ExpedidoEn['codigoPostal'], 
+        "codigoPostal"=>$DomicilioFiscal['codigoPostal']
+//        "expedidopais"=>strtr($array_ExpedidoEn['pais'],'ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖØòóôõöøÙÚÛÜùúûüÝý','AAAAAAaaaaaaCcEEEEeeeeIIIIiiiiÑñOOOOOOooooooUUUUuuuuYy'),
+//        "expedidocalle"=>strtr($array_ExpedidoEn['calle'],'ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖØòóôõöøÙÚÛÜùúûüÝý','AAAAAAaaaaaaCcEEEEeeeeIIIIiiiiÑñOOOOOOooooooUUUUuuuuYy'),
+//        "expedidoestado"=>$array_ExpedidoEn['estado'], 
+//        "expedidocolonia"=>strtr($array_ExpedidoEn['colonia'],'ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖØòóôõöøÙÚÛÜùúûüÝý','AAAAAAaaaaaaCcEEEEeeeeIIIIiiiiÑñOOOOOOooooooUUUUuuuuYy'),
+//        "expedidolocalidad"=>strtr($array_ExpedidoEn['localidad'],'ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖØòóôõöøÙÚÛÜùúûüÝý','AAAAAAaaaaaaCcEEEEeeeeIIIIiiiiÑñOOOOOOooooooUUUUuuuuYy'),
+//        "expedidomunicipio"=>strtr($array_ExpedidoEn['municipio'],'ÀÁÂÃÄÅàáâãäåÇçÈÉÊËèéêëÌÍÎÏìíîïÑñÒÓÔÕÖØòóôõöøÙÚÛÜùúûüÝý','AAAAAAaaaaaaCcEEEEeeeeIIIIiiiiÑñOOOOOOooooooUUUUuuuuYy'),
+//        "expedidonoExterior"=>$array_ExpedidoEn['noExterior'], 
+//        "expedidocodigoPostal"=>$array_ExpedidoEn['codigoPostal'], 
     );
                 
     foreach ($xml->xpath('//cfdi:Comprobante//cfdi:Receptor') as $Receptor)

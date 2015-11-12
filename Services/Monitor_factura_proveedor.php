@@ -121,7 +121,7 @@ class Monitor_factura_proveedor {
     }
     function Repeat_Update($directorio)
     {        
-//        $resultado="";
+        $resultado="";
         //Se limpia el arreglo carga nueva
         while(count($this->carga_nueva )) array_pop($this->carga_nueva );
         

@@ -1,8 +1,14 @@
 <?php
-include '/volume1/web/Transaction/Read_factura_cliente.php';
-include '/volume1/web/DAO/Querys.php';
-include '/volume1/web/DAO/Insert_pdf.php';
-include '/volume1/web/Transaction/webservice_sat.php';
+$RoutFile = dirname(getcwd()); 
+
+if(strcasecmp(basename($RoutFile), "web")!=0)
+        $RoutFile.="/web";
+
+include $RoutFile.'/Transaction/Read_factura_cliente.php';
+include $RoutFile.'/DAO/Querys.php';
+include $RoutFile.'/DAO/Insert_pdf.php';
+include $RoutFile.'/Transaction/webservice_sat.php';
+
 class Carga_factura_cliente {
      private $pila=array();
     private $emisor=array();
@@ -31,12 +37,14 @@ class Carga_factura_cliente {
 //      Instancia a la clase que lee los XML
         $read_xml=new Read_factura_cliente();     
         //Recorremos la pila recibida
-        for($valor=0;$valor<count($this->pila);$valor++)
-        {
+        for($valor=0;$valor<count($this->pila);$valor++){
             $existe=0;
-            $nombre_xml=  $this->pila[$valor];     
+            
+            $nombre_xml = $this->pila[$valor];   
+            
             //Se comprueba la extensión del archivo
-            $extension=strtolower($this->type_extension($nombre_xml));            
+            $extension=strtolower($this->type_extension($nombre_xml));    
+            
             //Cuando se encuentren archivos XML son procesados para obtener su información             
             if($extension=="xml")
             { 
@@ -65,30 +73,42 @@ class Carga_factura_cliente {
                 printf('\n Comienza validacion....');
                 $validador=  new webservice_sat();
                 $validacion=$validador->valida_cfdi($this->array_xml['emisor']['rfc'], $this->array_xml['receptor']['rfc'], $this->array_xml['encabezado']['total'], $this->array_xml['timbreFiscalDigital']['UUID']);
-                if($validacion==0)
+                
+                if(!is_object($validacion))
                 {
                     printf("\n Fallo en validacion");
                     rename($ruta_xml.$nombre_xml, "/volume1/Inbox_Factura_Cliente_XML/"."Invalido_".date('mdyHms').'_'.$nombre_xml);
                     continue;
-                }                                      
+                }    
+                
             }else{//Se guardan en stack los pdf que van llegando
-                    if($extension=="pdf")
-                    {
-                        array_push($this->pila_pdf, $nombre_xml);
-                    }    continue;            
-                 }        
+                if($extension=="pdf")
+                    array_push($this->pila_pdf, $nombre_xml);
+
+                continue;            
+            }        
                                                       
 //            /*  Devuelve el id del emisor si existe sino se aumenta el contador */
-            if(($this->id_emisor=$this->exist_emisor())  ==0){$this->id_emisor=$this->Insert_emisor(); }else{   $existe++;  }
+            if(($this->id_emisor=$this->exist_emisor())  ==0)
+                $this->id_emisor=$this->Insert_emisor(); 
+            else
+                $existe++;
 
 //            /*  Devuelve el id del receptor si existe sino se aumenta el contador */
-            if(($this->id_receptor=$this->exist_receptor())   ==0){$this->id_receptor=  $this->insert_receptor(); }else{$existe++; }
+            if(($this->id_receptor=$this->exist_receptor())   ==0)
+                $this->id_receptor=  $this->insert_receptor(); 
+            else
+                $existe++; 
 //            
 //            /*  Se obtienen los ids emisor y receptor después de la inserción de los mismo
 //             * esto pasa sino existian en caso de que existan la condición se ignora  */
-            if($this->id_emisor==0) {    $this->id_emisor=$this->id_emisor(); } 
-            if($this->id_receptor==0){   $this->id_receptor=  $this->id_receptor(); }
-////            
+            
+            if($this->id_emisor==0) 
+                $this->id_emisor=$this->id_emisor(); 
+            
+            if($this->id_receptor==0)
+                $this->id_receptor=  $this->id_receptor();
+          
             if(($id_detalle=$this->exist_detalle())==0)
             {                           
                 $extension = pathinfo($nombre_xml, PATHINFO_EXTENSION);
@@ -101,16 +121,15 @@ class Carga_factura_cliente {
                 $id_and_xml=array("id"=>$this->id_detalle,"nombre_xml"=>$nombre_xml);
                 array_push($this->pila_xml,$id_and_xml);                
             }
-            else{   $existe++;  }      
+            else
+                $existe++;   
 
-                if($existe==3)
-                {
-                    $intentos=$this->obtener_intentos($this->id_emisor, $nombre_xml);              
-                    $this->renombrado_fallido($ruta_xml, $nombre_xml, $intentos);/* Se renombra con Existe_ */
-                }                                                            
+            if($existe==3)
+            {
+                $intentos=$this->obtener_intentos($this->id_emisor, $nombre_xml);              
+                $this->renombrado_fallido($ruta_xml, $nombre_xml, $intentos);/* Se renombra con Existe_ */
+            }                                                            
                                             
-            //Se elimina el nombre del archivo procesado del archivo Log
-//            $this->delete_first_line();
             //Al terminar de insertar, se vacia el contenido de cada array
             while(count($this->emisor )) array_pop($this->emisor );
             while(count($this->receptor )) array_pop($this->receptor );
@@ -128,9 +147,7 @@ class Carga_factura_cliente {
         //para localizar su directorio correspondiente y se inserta en la BD su ruta
         
         if(count($this->stack_xml)==0)
-        {
             $this->registro_pdf=  $this->pila_pdf;
-        }
         else
         {
             foreach ($this->pila_pdf as $valor)
@@ -139,73 +156,21 @@ class Carga_factura_cliente {
                 $this->search_pdf_in_stack($valor);
             }
         }
-//
-//        //Al termino de procesar los PDF se insertan los xml que no tienen pareja pdf en el registro
-//        foreach ($this->stack_xml as $dato)
-//        {
-////            echo "  XML STACK =  ".$dato['nombre_xml'];
-//            //Insertamos en la tabla registro xml el nombre del pdf  
-//            $cadena = explode(".", $dato['nombre_xml']);
-//            $xml_a_buscar=$cadena[0];
-//            $xml_registro="$xml_a_buscar.pdf";
-//            $this->insert_xml_registro($dato['id'], $xml_registro);
-//        }
-//        $insert_pdf=new Insert_pdf();    
-//        //Se envian los PDF que no tienen pareja xml
-//        $insert_pdf->recibir_datos($this->registro_pdf);
+
         return TRUE;
         
         }#Fin de Método    
-        
-        // Se comprueba si el nombre del XML comienza con la palabra Existe o con R_    
-        private function Existe_o_Renombrado($nombre_xml)
-        {          
-            $palabra_inicial="";
-            if(stristr($nombre_xml,"Existe")===TRUE)
-            {
-                $palabra_inicial="Existe";
-            }
-            $R_= substr($nombre_xml, 0,2);
-            if($R_=="R_")
-            {         
-                $palabra_inicial="R_";
-            }
-            return $palabra_inicial;
-        }                       
+                             
 
     private function Insert_emisor()
     {      
-       $noExterior=$this->array_xml['emisor']['noExterior'];
-       if($noExterior=="")
-       $noExterior=0;
-       
-       $cp=$this->array_xml['emisor']['codigoPostal'];
-       if($cp=="")
-       $cp=0;
-       $expedidocp=$this->array_xml['emisor']['expedidocodigoPostal'];
-       if($expedidocp=="")
-       $expedidocp=0;
-       $expedidonoexterior=$this->array_xml['emisor']['expedidonoExterior'];
-       if($expedidonoexterior=="")
-       $expedidonoexterior=0;
         
         $Querys= new Querys();
         $conexion=$Querys->Conexion();          
         mysql_select_db('CFDI',  $conexion);
 
-        $query='INSERT INTO emisor_factura_cliente (rfc,nombre,pais,calle,estado,colonia,
-        municipio,noExterior,cp, localidad, expedidoCalle, expedidoNoExterior,
-        expedidoColonia, expedidoLocalidad, expedidoMunicipio, expedidoEstado,
-        expedidoPais, expedidoCP)
-        VALUES(\''.$this->array_xml['emisor']['rfc'].'\' , \''.$this->array_xml['emisor']['nombre'].'\' ,
-        \''.$this->array_xml['emisor']['pais'].'\' , \''.$this->array_xml['emisor']['calle'].'\' ,
-        \''.$this->array_xml['emisor']['estado'].'\' , \''.$this->array_xml['emisor']['colonia'].'\' ,
-        \''.$this->array_xml['emisor']['municipio'].'\' , \''.$noExterior.'\' ,
-        \''.$cp.'\', \''.$this->array_xml['emisor']['localidad'].'\' ,
-        \''.$this->array_xml['emisor']['expedidocalle'].'\' , \''.$expedidonoexterior.'\' ,
-        \''.$this->array_xml['emisor']['expedidocolonia'].'\' , \''.$this->array_xml['emisor']['expedidolocalidad'].'\' ,
-        \''.$this->array_xml['emisor']['expedidomunicipio'].'\' , \''.$this->array_xml['emisor']['expedidoestado'].'\' ,
-        \''.$this->array_xml['emisor']['expedidopais'].'\' , \''.$expedidocp.'\' )';
+        $query='INSERT INTO emisor_factura_cliente (rfc,nombre,pais) 
+        VALUES(\''.$this->array_xml['emisor']['rfc'].'\' , \''.$this->array_xml['emisor']['nombre'].'\' )';
                 
         $resultado=mysql_query($query,$conexion);
         if (!$resultado)
@@ -226,13 +191,8 @@ class Carga_factura_cliente {
         $conexion=$Querys->Conexion();  
         mysql_select_db('CFDI',  $conexion);
                 
-        $query='INSERT INTO receptor_factura_cliente
-        (rfc,nombre,pais,calle,estado,colonia,municipio,noExterior,cp)
-        VALUES (\''.$this->array_xml['receptor']['rfc'].'\' ,
-        \''.$this->array_xml['receptor']['nombre'].'\' , \''.$this->array_xml['receptor']['pais'].'\' ,
-        \''.$this->array_xml['receptor']['calle'].'\' , \''.$this->array_xml['receptor']['estado'].'\' ,
-        \''.$this->array_xml['receptor']['colonia'].'\' , \''.$this->array_xml['receptor']['municipio'].'\' ,\''.
-        $this->array_xml['receptor']['noExterior'].'\' ,\''.$this->array_xml['receptor']['codigoPostal'].'\' )';
+        $query='INSERT INTO receptor_factura_cliente (rfc,nombre) 
+        VALUES (\''.$this->array_xml['receptor']['rfc'].'\' , \''.$this->array_xml['receptor']['nombre'].'\')';
          
         $resultado=mysql_query($query,$conexion);
         if (!$resultado)
@@ -533,63 +493,7 @@ class Carga_factura_cliente {
         return $id;        
     } 
     
-    private function update_detalle($id_detalle,$id_emisor,$id_receptor,$ruta_xml)
-    {       
-        $rfc=$this->array_xml['receptor']['rfc'];
-        $serie=$this->array_xml['encabezado']['serie'];
-        $folio=$this->array_xml['encabezado']['folio'];
-        $fecha=$this->array_xml['encabezado']['fecha'];
-        $formaDePago=$this->array_xml['encabezado']['formaDePago'];
-        $subTotal=$this->array_xml['encabezado']['subTotal'];
-        $descuento=$this->array_xml['encabezado']['descuento'];
-        $total=$this->array_xml['encabezado']['descuento'];
-        $metodoDePago=$this->array_xml['encabezado']['metodoDePago'];
-        $tipoDeComprobante=$this->array_xml['encabezado']['tipoDeComprobante'];
-        $tipoCambio=$this->array_xml['encabezado']['TipoCambio'];
-        $moneda=$this->array_xml['encabezado']['Moneda'];
-        $LugarExpedicion=$this->array_xml['encabezado']['LugarExpedicion'];     
-        $unidad1=$this->array_xml['conceptos'][0]['unidad'];
-        $noide1=$this->array_xml['conceptos'][0]['noIdentificacion'];
-        $descripcion1=$this->array_xml['conceptos'][0]['descripcion'];
-        $valorunitario1=$this->array_xml['conceptos'][0]['valorUnitario'];
-        $importe1=$this->array_xml['conceptos'][0]['importe'];
-        
-        $unidad2=$this->array_xml['conceptos'][1]['unidad'];
-        $noide2=$this->array_xml['conceptos'][1]['noIdentificacion'];
-        $descripcion2=$this->array_xml['conceptos'][1]['descripcion'];
-        $valorunitario2=$this->array_xml['conceptos'][1]['valorUnitario'];
-        $importe2=$this->array_xml['conceptos'][1]['importe'];
-        
-        $unidad3=$this->array_xml['conceptos'][2]['unidad'];
-        $noide3=$this->array_xml['conceptos'][2]['noIdentificacion'];
-        $descripcion3=$this->array_xml['conceptos'][2]['descripcion'];
-        $valorunitario3=$this->array_xml['conceptos'][2]['valorUnitario'];
-        $importe3=$this->array_xml['conceptos'][2]['importe'];       
-        
-        $Querys= new Querys();
-        $conexion=$Querys->Conexion();  
-        mysql_select_db('CFDI',  $conexion);
-        
-        $query="UPDATE detalle_factura_cliente SET rfc_cliente='$rfc', serie='$serie',
-        folio='$folio', fecha='$fecha', formaDePago='$formaDePago',
-        subTotal=$subTotal, descuento=$descuento, total=$total, metodoDePago='$metodoDePago',
-        tipoDeComprobante='$tipoDeComprobante', TipoCambio=$tipoCambio, Moneda='$moneda',
-        LugarExpedicion='$LugarExpedicion', unidad1='$unidad1', noIdentificacion1='$noide1', 
-        descripcion1='$descripcion1', valorUnitario1=$valorunitario1,importe1 =$importe1, 
-        unidad2='$unidad2', noIdentificacion2='$noide2', descripcion2='$descripcion2', 
-        valorUnitario2=$valorunitario2,importe2 =$importe2, unidad3='$unidad3', noIdentificacion3='$noide3',
-        descripcion3='$descripcion3', valorUnitario3=$valorunitario3,importe3 =$importe3, ruta_xml='$ruta_xml' 
-        WHERE id_detalle=$id_detalle and id_emisor=$id_emisor and id_receptor= $id_receptor";
-
-        $resultado=mysql_query($query,$conexion);
-        if (!$resultado)
-            {
-                $mensaje  = 'Consulta no válida: ' . mysql_error() . "\n";
-                $mensaje .= 'Consulta completa: ' . $query;
-                printf("\n".$mensaje);
-            }                                           
-        mysql_close($conexion);               
-    }
+    
     //Busca la ruta del xml en tabla detalle para reemplazarla (update con R_ al inicio del nombre del archivo xml)
      private function ruta_xml($id_empleado)
     {

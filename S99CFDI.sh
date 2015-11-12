@@ -122,10 +122,10 @@
         # código para parar el demonio/programa
 		#echo "CFDI detenido"
 		#/usr/bin/php -f /volume1/web/Stop_CSVmonitor.php
-		nohup php /volume1/web/Services/Stop_CSVmonitor.php &
-		sleep 2
-		nohup php /volume1/web/Services/Stop_Timbrado_Nomina.php &
-		sleep 2
+		##nohup php /volume1/web/Services/Stop_CSVmonitor.php &
+		##sleep 2
+		##nohup php /volume1/web/Services/Stop_Timbrado_Nomina.php &
+		##sleep 2
 		nohup php /volume1/web/Services/Stop_Monitor_Nomina_XML.php &
 		sleep 2
 		nohup php /volume1/web/Services/Stop_Monitor_Factura_Cliente.php &
@@ -143,10 +143,10 @@
      restart)
         # código para reiniciar el demonio/programa
 		
-		nohup php /volume1/web/Services/Stop_CSVmonitor.php &
-		sleep 2
-		nohup php /volume1/web/Services/Stop_Timbrado_Nomina.php &
-		sleep 2
+		##nohup php /volume1/web/Services/Stop_CSVmonitor.php &
+		##sleep 2
+		##nohup php /volume1/web/Services/Stop_Timbrado_Nomina.php &
+		##sleep 2
 		nohup php /volume1/web/Services/Stop_Monitor_Nomina_XML.php &
 		sleep 2
 		nohup php /volume1/web/Services/Stop_Monitor_Factura_Cliente.php &
@@ -238,8 +238,8 @@
 		nohup php /volume1/web/DAO/Build_CFDI.php &
 		sleep 2;
 		nohup php /volume1/web/DAO/vistas.php &
-		nohup php /volume1/web/Services/Monitor_CSV_TXT.php &
-		sleep 1
+		##nohup php /volume1/web/Services/Monitor_CSV_TXT.php &
+		##sleep 1
 		#nohup php /volume1/web/Services/Timbrado_Nomina_XML.php &
 		#sleep 1
 		nohup php /volume1/web/Services/Monitor_Nomina_XML.php &		

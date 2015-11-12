@@ -515,4 +515,3 @@ class Carga_xml_nomina {
     
 }
 
-?>

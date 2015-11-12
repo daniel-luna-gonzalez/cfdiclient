@@ -30,12 +30,21 @@ ClassTree.prototype.InitTree = function(content)
             imagePath: "media/css/skin-custom/",
             onClick: function(node)
             {                  
-                var title=node.data.key;
+                var title = node.data.key;             
                 var id = title.replace("CFDI", "");
+                
                 if(id>0)
                 {
+                    var transmiter = node.getParent();
+                    var idTransmiter = transmiter.data.key;
+                    console.log(idTransmiter);
+                    idTransmiter = String(idTransmiter).replace("Folder_","");
+                 
+                    if(!(parseInt(idTransmiter)) > 0 )
+                        return 0;
+                    
                     var cfdi = new CFDI();
-                    cfdi.GetFiles(content, id);
+                    cfdi.GetFiles(content, idTransmiter, id);
                 }
                 else
                     node.sortChildren(ClassTree.cmp, false);

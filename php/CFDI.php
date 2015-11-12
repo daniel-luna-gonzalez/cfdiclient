@@ -365,7 +365,7 @@ class CFDI {
         if(strcasecmp($content, 'Provider')==0 or strcasecmp($content, 'Client')==0)
         {
             if($StartDate=="" and $EndDate=="")
-                $q="SELECT det.id_detalle, det.fecha, det.folio, det.subTotal, det.descuento, det.total,ruta_xml, det.ruta_pdf, det.id_validacion, det.tipo_archivo, val.ruta_acuse FROM detalle_factura_$TableName det inner join validacion_$TableName val on det.id_validacion=val.id_validacion WHERE det.id_receptor=$IdReceiver $WhereTransmiter $Match";
+                $q="SELECT det.id_detalle, det.fecha, det.folio, det.subTotal, det.descuento, det.total,ruta_xml, det.ruta_pdf, det.id_validacion, det.tipo_archivo, val.ruta_acuse FROM detalle_factura_$TableName det inner join validacion_$TableName val on det.id_validacion=val.id_validacion WHERE det.id_receptor = $IdReceiver $WhereTransmiter $Match";
             if($StartDate!="" and $EndDate!="")
                 $q="SELECT det.id_detalle, det.fecha, det.folio, det.subTotal, det.descuento, det.total,ruta_xml, det.ruta_pdf, det.id_validacion, det.tipo_archivo, val.ruta_acuse FROM detalle_factura_$TableName det inner join validacion_$TableName val on det.id_validacion=val.id_validacion WHERE id_receptor=$IdReceiver $WhereTransmiter AND (det.fecha BETWEEN '$StartDate' AND '$EndDate') $Match";
             if($StartDate!="" and $EndDate=="")

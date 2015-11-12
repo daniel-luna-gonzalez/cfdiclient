@@ -44,7 +44,7 @@ var CFDI = function()
         pdf.ShowPdfAbsolutPath(Path);
     };
     
-    _ShowXml = function(content, IdCfdi, Path)
+    _ShowXml = function(content, IdCfdi, Path, ReceiptPath)
     {
         var historical = new Historical();
         var xml = self.GetXmlStructureByPath(content,Path);       
@@ -63,10 +63,10 @@ var CFDI = function()
         $('#'+content+'ButtonShowAcuse').click(function()
         {
 //            var SatAnswer = new SATAnswer();
-            var receipt = new Receipt();
-            var XmlSatAnswer = receipt.GetXmlSatValidationCfdiAnswer(content, IdCfdi); /* Id detalle */
-            if($.isXMLDoc(XmlSatAnswer))
-                mostrar_acuse(XmlSatAnswer);
+//            var receipt = new Receipt();
+//            var XmlSatAnswer = receipt.GetXmlSatValidationCfdiAnswer(content, IdCfdi); /* Id detalle */
+//            if($.isXMLDoc(XmlSatAnswer))
+            _ShowValidationReceipt(content, IdCfdi, Path);
         });
         var historic = new Historical();
         historic.GetHistoric(content, IdCfdi);
@@ -127,7 +127,7 @@ var CFDI = function()
                 Iva,
                 Total,
                 '<img src = "img/acuse.png" onclick = "_ShowValidationReceipt(\''+div+'\',\''+IdReceiptValidation+'\', \''+ReceiptPath+'\')" title = "Ver acuse" style = "cursor:pointer">',
-                '<img src = "img/folder_xml.png" onclick = "_ShowXml(\''+div+'\', \''+IdCfdi+'\' ,\''+XmlPath+'\')" title = "Ver docoumento xml" style = "cursor:pointer">',
+                '<img src = "img/folder_xml.png" onclick = "_ShowXml(\''+div+'\', \''+IdCfdi+'\' ,\''+XmlPath+'\', \''+ReceiptPath+'\')" title = "Ver docoumento xml" style = "cursor:pointer">',
                 PdfImage,
                 FileState
            ];   
@@ -214,7 +214,7 @@ CFDI.prototype.GetXmlStructureById = function(IdDetail)
     
 };
 
-CFDI.prototype.GetFiles = function(content, IdReceiver)
+CFDI.prototype.GetFiles = function(content, IdTransmiter, IdReceiver)
 {
     var self = this;
     
@@ -230,7 +230,7 @@ CFDI.prototype.GetFiles = function(content, IdReceiver)
     dataType:"html", 
     type: 'POST',   
     url: "php/CFDI.php",
-    data:"IdUser="+EnvironmentData.IdUser+'&UserName='+EnvironmentData.UserName+'&content='+content+'&option=GetFiles'+'&IdReceiver='+IdReceiver+'&IdTransmiter='+IdEnterprise+'&StartDate='+StartDate+'&EndDate='+EndDate+'&SearchWord='+SearchWord, 
+    data:"IdUser="+EnvironmentData.IdUser+'&UserName='+EnvironmentData.UserName+'&content='+content+'&option=GetFiles'+'&IdReceiver='+IdReceiver+'&IdTransmiter='+IdTransmiter+'&StartDate='+StartDate+'&EndDate='+EndDate+'&SearchWord='+SearchWord, 
     success:  function(response)
     {   
         if($.parseXML( response )===null){Error(response); return 0;}else xml=$.parseXML( response );
