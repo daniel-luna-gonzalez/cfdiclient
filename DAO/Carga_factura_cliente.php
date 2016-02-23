@@ -1,8 +1,8 @@
 <?php
-$RoutFile = dirname(getcwd()); 
+$RoutFile = dirname(getcwd())."/web"; 
 
-if(strcasecmp(basename($RoutFile), "web")!=0)
-        $RoutFile.="/web";
+print ("\n  Path principal $RoutFile");
+
 
 include $RoutFile.'/Transaction/Read_factura_cliente.php';
 include $RoutFile.'/DAO/Querys.php';
