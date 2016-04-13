@@ -2,7 +2,10 @@
 
 $RoutFile = dirname(getcwd())."/web"; 
 
-print ("\n  Path principal $RoutFile");
+if(!file_exists($RoutFile))
+    $RoutFile = dirname(getcwd());
+else            /* Ejecutando en modo servicio */    
+    print ("\n  Path principal $RoutFile");
 
 include $RoutFile.'/Transaction/Read_factura_cliente.php';
 include $RoutFile.'/DAO/Querys.php';
